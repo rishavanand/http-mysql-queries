@@ -1,0 +1,26 @@
+body {
+  padding-top: 70px;
+}
+
+.form-control{
+  margin-bottom: 5px;
+}
+
+.zero-lr-padding{
+  padding-left: 0;
+  padding-right : 0;
+}
+
+.query-error{
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.success-msg{
+  color: #2ecc71;
+  font-weight: bold;
+}
+
+/*.add-query-box{
+  margin-bottom: 20px;
+}*/

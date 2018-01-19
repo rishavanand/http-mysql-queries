@@ -1,6 +1,3 @@
-<?php
-	include('config.php');
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,103 +8,156 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Simple Sidebar - Start Bootstrap Template</title>
+    <title>MySQL Live Queries</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/simple-sidebar.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
 
 </head>
 
 <body>
 
-    <div id="wrapper">
-
-        <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-                <li class="sidebar-brand">
-                    <a href="#">
-                        <b>MySQL Live Queries</b>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">Queries</a>
-                </li>
-                <li>
-                    <a href="#">GitHub Repo</a>
-                </li>
-            </ul>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">MySQL Live Queries</a>
         </div>
-        <!-- /#sidebar-wrapper -->
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">MySQL cheat sheet</a></li>
+            <li><a href="#">Github Repo</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
 
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-            <div class="container-fluid">
-                <h4><b>MySQL Live Queries</b></h4>
-                <a href="#menu-toggle" class="btn btn-xs btn-primary" id="menu-toggle">Toggle Menu</a><hr>
-                <table class="table">
-	                <?php
-	                    $conn = new mysqli($host, $dbuser, $pass, $table);
-	                    if($conn->connect_error)
-	                        echo $conn->connect_error;
-	                    else
-	                        echo 'Connected to Database!<br>';
-	                    $sql = 'select * from orders';
-	                    $result = $conn->query($sql);
+    <div class="container">
+	  	<div class="col-md-12">
+	  	<div class="panel panel-primary">
+	  		<div class="panel-heading">
+	  			Credentials
+	  		</div>
+	  		<div class="panel-body zero-lr-padding">
+	  			<div class="col-md-3">
+					<input id="database-host" class="form-control" type="text" placeholder="Host">
+				</div>
+				<div class="col-md-3">
+					<input id="database-host" class="form-control" type="text" placeholder="Database name">
+				</div>
+				<div class="col-md-3">
+					<input id="database-host" class="form-control" type="text" placeholder="Databse user">
+				</div>
+				<div class="col-md-3">
+					<input id="database-host" class="form-control" type="text" placeholder="Password">
+				</div>
+	  		</div>
+	  	</div>
+	  </div>
 
-	                    if($result->num_rows > 0){
-	                    	print_table($result);
-	                    }else{
-	                        var_dump($conn->connect_error);
-	                    }
-	                ?>
-            	</table>
-            </div>
-        </div>
-        <!-- /#page-content-wrapper -->
+	<div class="col-md-12 add-query-box">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<center>
+					Add additional query boxes
+					<button class="btn btn-primary btn-xs" onclick="addQueryBox()">+1</button>
+				</center>
+			</div>
+		</div>
+	</div>
 
-    </div>
-    <!-- /#wrapper -->
+	<div id="query-boxes">
+  		<div class="col-md-6" id="query-div-1">
+		    <div class="panel panel-default">
+		      	<div class="panel-heading">
+					<div class="form-group">
+						<label for="comment">SQL Query:</label>
+						<div class="pull-right">
+							<button class="btn btn-primary btn-xs" id='1' onclick="query(this.id)">Execute</button>
+						</div>
+						<textarea class="form-control" rows="1" id="query-input-1"></textarea>
+					</div> 
+		      	</div>
+		      	<div class="panel-body">
+		      		<div class="query-error" id="query-error-1"></div>
+		      		<div class="table-responsive" id='query-response-1'>
+				        Query results will appear here after you make one.
+				    </div>
+				</div>
+		    </div>
+		</div>
+	</div>
 
-    <!-- Bootstrap core JavaScript -->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.bundle.min.js"></script>
+		
 
-    <!-- Menu Toggle Script -->
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script>window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')</script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
     <script>
-    $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
-    </script>
 
-</body>
+    	var totalQueryBoxes = 1;
 
-</html>
-
-<?php 
-
-function print_table($result){
-	$table_header_flag = 0;
-    while($row = $result->fetch_assoc()){
-    	if(!$table_header_flag){
-    		$keys = array_keys($row);
-    		echo '<thead><tr>';
-    		foreach ($keys as $key) {
-    			echo '<td>' . $key . '</td>';
-    		}
-    		echo '<thead><tr>';
-    		$table_header_flag = 1;
+    	function addQueryBox(){
+    		totalQueryBoxes += 1;
+    		$('#query-boxes').append(getMarkup(totalQueryBoxes));
     	}
-    	echo "<tr>";
-        foreach ($row as $key=>$value){
-            echo '<td>' . $value. '</td>';
-        }
-        echo "</tr>";
-    }
-}
 
-?>
+    	function getMarkup(id){
+    		var markup = `<div class="col-md-6" id="query-div-`+ id +`">
+			    <div class="panel panel-default">
+			      	<div class="panel-heading">
+						<div class="form-group">
+							<label for="comment">SQL Query:</label>
+							<div class="pull-right">
+								<button class="btn btn-primary btn-xs" id="`+ id +`" onclick="query(this.id)">Execute</button>
+							</div>
+							<textarea class="form-control" rows="1" id="query-input-`+ id +`"></textarea>
+						</div> 
+			      	</div>
+			      	<div class="panel-body">
+			      		<div class="query-error" id="query-error-`+ id +`"></div>
+			      		<div class="table-responsive" id="query-response-`+ id +`">
+					        Query results will appear here after you make one.
+					    </div>
+					</div>
+			    </div>
+			</div>`;
+			return markup;
+    	}
+
+    	function query(id){
+    		$('#query-error-' + id).html('');
+    		$('#query-response-' + id).html('');
+    		var sql = $('#query-input-' + id).val();
+    		$.post('query.php', {'sql': sql}, function(res, status){
+    			res = JSON.parse(res);
+    			console.log(res);
+    			if(res.success){
+    				if(res.type == 'object')
+    					$('#query-response-' + id).html(res.data);
+    				else if(res.type == 'boolean')
+    					$('#query-response-' + id).html('<div class="success-msg"> Executed successfully. </div>');
+    			}else{
+    				$('#query-error-' + id).html(res.error);	
+    			}
+    		});
+    	}
+    </script>
+  </body>
+</html>
