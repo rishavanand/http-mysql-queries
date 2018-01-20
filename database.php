@@ -1,14 +1,15 @@
 <?php 
 
-require 'config.php';
+error_reporting(E_ERROR | E_PARSE);
 
 class ProcessQuery{
 
 	public $connect_error = 0;
 
-	function connect(){
+	// Create connection
+	function connect($hostname, $database, $user, $pass){
 
-		$this->conn = new mysqli($GLOBALS['host'], $GLOBALS['dbuser'], $GLOBALS['pass'], $GLOBALS['database']);
+		$this->conn = new mysqli($hostname, $user, $pass, $database);
 		if($this->conn->connect_error){
 			$this->connect_error = $this->conn->connect_error;
 			return false;
@@ -18,11 +19,13 @@ class ProcessQuery{
 
 	}
 
+	// Perform sql query
 	function perform_query($sql){
 
 	    $result = $this->conn->query($sql);
 	    $result_type = gettype($result);
 
+	    // Response is a boolean
 	    if($result_type == 'boolean'){
 	    	$return_data['type'] = 'boolean';
 	    	if($result){
@@ -31,7 +34,7 @@ class ProcessQuery{
 	    		$return_data['success'] = false;
 	    		$return_data['error'] = $this->conn->error;
 	    	}
-	    }elseif($result_type == 'object'){
+	    }elseif($result_type == 'object'){ // Response is an object containing your fetched data
 	    	$return_data['type'] = 'object';
 		    if($result->num_rows > 0){
 		    	$return_data['success'] = true;
@@ -46,6 +49,7 @@ class ProcessQuery{
 
 	}
 
+	// Return markup
 	function create_markup($result){
 
 		$table_header_flag = 0;

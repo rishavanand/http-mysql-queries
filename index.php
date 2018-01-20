@@ -49,16 +49,16 @@
 	  		</div>
 	  		<div class="panel-body zero-lr-padding">
 	  			<div class="col-md-3">
-					<input id="database-host" class="form-control" type="text" placeholder="Host">
+					<input id="database-host" class="form-control" type="text" placeholder="Host" required>
 				</div>
 				<div class="col-md-3">
-					<input id="database-host" class="form-control" type="text" placeholder="Database name">
+					<input id="database-name" class="form-control" type="text" placeholder="Database name" required>
 				</div>
 				<div class="col-md-3">
-					<input id="database-host" class="form-control" type="text" placeholder="Databse user">
+					<input id="database-user" class="form-control" type="text" placeholder="Databse user" required>
 				</div>
 				<div class="col-md-3">
-					<input id="database-host" class="form-control" type="text" placeholder="Password">
+					<input id="database-pass" class="form-control" type="password" placeholder="Password" required>
 				</div>
 	  		</div>
 	  	</div>
@@ -145,7 +145,17 @@
     		$('#query-error-' + id).html('');
     		$('#query-response-' + id).html('');
     		var sql = $('#query-input-' + id).val();
-    		$.post('query.php', {'sql': sql}, function(res, status){
+    		var hostname = $('#database-host').val();
+    		var database = $('#database-name').val();
+    		var user = $('#database-user').val();
+    		var pass = $('#database-pass').val();
+    		$.post('query.php', {
+    			'sql': sql,
+    			'hostname': hostname,
+    			'database': database,
+    			'user': user,
+    			'pass': pass
+    		}, function(res, status){
     			res = JSON.parse(res);
     			console.log(res);
     			if(res.success){
