@@ -5,10 +5,10 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Lets you make SQL queries to MySQL via your browser">
+    <meta name="author" content="Rishav Anand">
 
-    <title>MySQL Live Queries</title>
+    <title>HTTP MySQL Queries</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -30,14 +30,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">MySQL Live Queries</a>
+          <a class="navbar-brand" href="#">HTTP MySQL Queries</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">MySQL cheat sheet</a></li>
-            <li><a href="#">Github Repo</a></li>
+            <!-- <li><a href="#">MySQL cheat sheet</a></li> -->
+            <li><a href="https://github.com/rishavanand/http-mysql-queries" target="_blank">Github Repo</a></li>
           </ul>
-        </div><!--/.nav-collapse -->
+        </div>
       </div>
     </nav>
 
@@ -107,8 +107,6 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script>window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')</script>
     <script src="js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
     <script>
 
     	var totalQueryBoxes = 1;
@@ -157,7 +155,6 @@
     			'pass': pass
     		}, function(res, status){
     			res = JSON.parse(res);
-    			console.log(res);
     			if(res.success){
     				if(res.type == 'object')
     					$('#query-response-' + id).html(res.data);
